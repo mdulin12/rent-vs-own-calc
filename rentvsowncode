@@ -1,0 +1,40 @@
+import { useState } from "react";
+
+export default function RentVsOwnCalculator() {
+  const [monthlyRent, setMonthlyRent] = useState(2200);
+  const [monthlyMortgage, setMonthlyMortgage] = useState(2600);
+  const [downPayment, setDownPayment] = useState(45000);
+  const [years, setYears] = useState(5);
+  const appreciationRate = 0.03;
+
+  const totalRent = monthlyRent * 12 * years;
+  const totalMortgage = monthlyMortgage * 12 * years;
+  const homePrice = downPayment / 0.15;
+  const futureHomeValue = homePrice * Math.pow(1 + appreciationRate, years);
+  const equityGain = futureHomeValue - homePrice;
+  const totalCostBuying = downPayment + totalMortgage - equityGain;
+  const netSavings = totalRent - totalCostBuying;
+
+  return (
+    <div className="p-6 max-w-lg mx-auto rounded-2xl shadow-xl bg-white space-y-4">
+      <h1 className="text-2xl font-bold">Rent vs Own Calculator</h1>
+      <div className="space-y-2">
+        <label>Monthly Rent: $<input type="number" value={monthlyRent} onChange={(e) => setMonthlyRent(+e.target.value)} className="ml-2 border rounded p-1 w-24" /></label><br/>
+        <label>Monthly Mortgage: $<input type="number" value={monthlyMortgage} onChange={(e) => setMonthlyMortgage(+e.target.value)} className="ml-2 border rounded p-1 w-24" /></label><br/>
+        <label>Down Payment: $<input type="number" value={downPayment} onChange={(e) => setDownPayment(+e.target.value)} className="ml-2 border rounded p-1 w-24" /></label><br/>
+        <label>Years: <input type="number" value={years} onChange={(e) => setYears(+e.target.value)} className="ml-2 border rounded p-1 w-16" /></label>
+      </div>
+
+      <div className="mt-4 bg-gray-50 p-4 rounded-xl space-y-2">
+        <p><strong>Total Rent Paid:</strong> ${totalRent.toLocaleString()}</p>
+        <p><strong>Total Mortgage Paid:</strong> ${totalMortgage.toLocaleString()}</p>
+        <p><strong>Future Home Value:</strong> ${futureHomeValue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+        <p><strong>Estimated Equity Gain:</strong> ${equityGain.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+        <p><strong>Total Cost of Buying (Equity Adjusted):</strong> ${totalCostBuying.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+        <p className={netSavings > 0 ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
+          {netSavings > 0 ? `Owning saves you $${netSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : `Renting saves you $${Math.abs(netSavings).toLocaleString(undefined, { maximumFractionDigits: 0 })}`}
+        </p>
+      </div>
+    </div>
+  );
+}
